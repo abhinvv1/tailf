@@ -1,5 +1,7 @@
 import fs from 'fs/promises';
 
+let lastPosition = 0;
+
 async function getLastLines(filePath, numLines = 10) {
   const fileHandle = await fs.open(filePath, 'r');
   try {
@@ -21,14 +23,13 @@ async function getLastLines(filePath, numLines = 10) {
         temp = "";
       }
     }
+    lastPosition = size;
 
     return dataQueue;
   } finally {
     await fileHandle.close();
   }
 }
-
-let lastPosition = 0;
 
 async function sendNewContent(filePath, callback) {
   const stats = await fs.stat(filePath);
