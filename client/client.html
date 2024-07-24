@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log Viewer</title>
+</head>
+<body>
+    <h1>Log Viewer</h1>
+    <div id="log"></div>
+
+    <script>
+        const logElement = document.getElementById('log');
+        const ws = new WebSocket(`ws://${location.host}`);
+
+        ws.onmessage = (event) => {
+            const message = JSON.parse(event.data);
+            if (message.type === 'update') {
+                const lineElement = document.createElement('div');
+                lineElement.textContent = message.data;
+                logElement.appendChild(lineElement);
+                logElement.scrollTop = logElement.scrollHeight;
+            }
+        };
+
+        ws.onclose = () => {
+            console.log('WebSocket connection closed');
+        };
+    </script>
+</body>
+</html>
